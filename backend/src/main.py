@@ -1,3 +1,5 @@
+
+from database import supabase
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -21,7 +23,8 @@ tasks = [
 
 @app.get("/tasks")
 def get_tasks():
-    return tasks
+    response = supabase.table("tasks").select("*").execute()
+    return response.data
 
 @app.post("/tasks")
 def create_task(task: TaskCreate):
@@ -43,4 +46,21 @@ def update_task(task_id: int, task_update: TaskUpdate):
             task["title"] = task_update.title
             task["completed"] = task_update.completed
             return task
+    raise HTTPException(status_code=404, detail="Tarea no encontrada")
+
+def delete_task(task_id: int):
+    for task in tasks:
+        if task["id"] == task_id:
+            tasks.remove(task)
+            return {"message": "Tarea eliminada correctamente"}
+
+    raise HTTPException(status_code=404, detail="Tarea no encontrada")
+
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int):
+    for task in tasks:
+        if task["id"] == task_id:
+            tasks.remove(task)
+            return {"message": "Tarea eliminada correctamente"}
+
     raise HTTPException(status_code=404, detail="Tarea no encontrada")
