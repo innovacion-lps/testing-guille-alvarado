@@ -1,0 +1,7 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Supabase local temporary files
+supabase/.temp/
