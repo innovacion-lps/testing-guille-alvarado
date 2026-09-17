@@ -5,3 +5,6 @@
 
 # Supabase local temporary files
 supabase/.temp/
+
+# opencode config with secrets (Penpot MCP token)
+opencode.json
