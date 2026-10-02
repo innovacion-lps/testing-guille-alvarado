@@ -1,7 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import SidebarMain from './SidebarMain.vue'
-const emit = defineEmits(['cancel'])
+import api from '../services/api'
+const emit = defineEmits(['cancel', 'create'])
+
+const title = ref('')
 
 const requirements = ref([
   {
@@ -22,6 +25,8 @@ const requirements = ref([
 ])
 
 const newRequirement = ref('')
+const createError = ref('')
+const isCreating = ref(false)
 
 function addRequirement() {
   const value = newRequirement.value.trim()
@@ -39,6 +44,33 @@ function addRequirement() {
 
 function removeRequirement(id) {
   requirements.value = requirements.value.filter(requirement => requirement.id !== id)
+}
+async function handleCreate() {
+  if (!title.value.trim() || isCreating.value) return
+  createError.value = ''
+  isCreating.value = true
+  try {
+    const payload = {
+      title: title.value.trim(),
+      description: null,
+      country: null,
+      currency: null,
+      salary_min: null,
+      salary_max: null,
+      requirements: []
+    }
+    const response = await api.post('/positions', payload)
+    emit('create', response.data)
+  } catch (e) {
+    console.error('Error creando posición:', e)
+    createError.value =
+      e?.response?.data?.detail ||
+      (e?.code === 'ERR_NETWORK' || e?.message?.includes('Network')
+        ? 'No se pudo conectar con el backend en http://127.0.0.1:8007. ¿Está corriendo uvicorn?'
+        : 'No se pudo crear la posición. Revisa la consola.')
+  } finally {
+    isCreating.value = false
+  }
 }
 </script>
 
@@ -70,9 +102,12 @@ function removeRequirement(id) {
           <div class="header-actions">
             <button class="cancel-button" @click="emit('cancel')">Cancelar</button>
 
-            <button class="create-button">Crear posición</button>
+            <button class="btn btn-primary" @click="handleCreate" :disabled="isCreating">
+              {{ isCreating ? 'Creando...' : 'Crear posición' }}
+            </button>
           </div>
         </div>
+        <p v-if="createError" class="create-error">{{ createError }}</p>
       </header>
 
       <!-- CONTENT -->
@@ -95,7 +130,7 @@ function removeRequirement(id) {
               <div class="field field-full">
                 <label> Nombre de la posición </label>
 
-                <input type="text" placeholder="Ej. Senior Backend Developer" />
+                <input v-model="title" type="text" placeholder="Ej. Senior Backend Developer" />
               </div>
 
               <div class="field">
@@ -414,8 +449,7 @@ function removeRequirement(id) {
   gap: 10px;
 }
 
-.cancel-button,
-.create-button {
+.cancel-button {
   padding: 11px 18px;
   border-radius: 10px;
   font-family: inherit;
@@ -424,6 +458,8 @@ function removeRequirement(id) {
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
+/* .create-button migrado a global .btn-primary (assets/global.css) */
 
 .cancel-button {
   background: transparent;
@@ -435,15 +471,16 @@ function removeRequirement(id) {
   background: #fffdfb;
 }
 
-.create-button {
-  background: #d97757;
-  border: 1px solid #d97757;
-  color: white;
-  box-shadow: 0 5px 15px rgba(217, 119, 87, 0.18);
-}
+/* .create-button migrado a global .btn-primary (assets/global.css) */
 
-.create-button:hover {
-  background: #c96643;
+.create-error {
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  background: rgba(211, 47, 47, 0.08);
+  border: 1px solid rgba(211, 47, 47, 0.3);
+  border-radius: 9px;
+  color: #b3261e;
+  font-size: 12px;
 }
 
 /* LAYOUT */
@@ -920,7 +957,7 @@ function removeRequirement(id) {
   }
 
   .cancel-button,
-  .create-button {
+  .btn-primary {
     flex: 1;
   }
 

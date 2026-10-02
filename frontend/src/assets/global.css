@@ -1,0 +1,54 @@
+/* Botones principales de la app — única fuente de verdad.
+   Importado una vez en src/main.js */
+
+:root {
+  --brand: #f97316;
+  --brand-hover: #ea580c;
+  --brand-soft: #fff1e6;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.btn svg {
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Principal naranja: Nueva posición, Crear posición, Guardar, etc. */
+.btn-primary {
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--brand);
+  background: var(--brand);
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 5px 15px rgba(249, 115, 22, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

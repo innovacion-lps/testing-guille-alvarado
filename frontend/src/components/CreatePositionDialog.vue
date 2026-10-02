@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, nextTick, computed } from 'vue'
+import CustomSelect from './CustomSelect.vue'
 
 const props = defineProps({
   visible: { type: Boolean, default: false }
@@ -24,6 +25,10 @@ const COUNTRIES = [
 ]
 
 const CURRENCIES = ['COP', 'MAD', 'PEN', 'EUR', 'USD']
+
+const countryOptions = computed(() =>
+  COUNTRIES.map(c => ({ value: c.code, label: c.name }))
+)
 
 const country = ref('')
 const currency = ref('')
@@ -243,22 +248,22 @@ const submit = () => {
         <div class="form-row">
           <div class="form-group">
             <label>País</label>
-            <select v-model="country" :disabled="loading">
-              <option value="">Seleccionar país</option>
-              <option v-for="c in COUNTRIES" :key="c.code" :value="c.code">
-                {{ c.name }}
-              </option>
-            </select>
+            <CustomSelect
+              v-model="country"
+              :options="countryOptions"
+              placeholder="Seleccionar país"
+              :disabled="loading"
+            />
           </div>
 
           <div class="form-group">
             <label>Moneda</label>
-            <select v-model="currency" :disabled="loading">
-              <option value="">Seleccionar moneda</option>
-              <option v-for="cur in CURRENCIES" :key="cur" :value="cur">
-                {{ cur }}
-              </option>
-            </select>
+            <CustomSelect
+              v-model="currency"
+              :options="CURRENCIES"
+              placeholder="Seleccionar moneda"
+              :disabled="loading"
+            />
           </div>
         </div>
 
@@ -400,7 +405,7 @@ const submit = () => {
                 </div>
                 <div class="req-chip-edit-actions">
                   <button class="btn-cancel" @click="cancelEditReq">Cancelar</button>
-                  <button class="btn-submit" @click="saveEditReq" :disabled="!editReq.title.trim()">
+                  <button class="btn btn-primary" @click="saveEditReq" :disabled="!editReq.title.trim()">
                     Guardar
                   </button>
                 </div>
@@ -465,7 +470,7 @@ const submit = () => {
             <div class="req-chip-edit-actions">
               <button class="btn-cancel" @click="cancelNewRequirement">Cancelar</button>
               <button
-                class="btn-submit"
+                class="btn btn-primary"
                 @click="saveNewRequirement"
                 :disabled="!newReq.title.trim()"
               >
@@ -485,7 +490,7 @@ const submit = () => {
       <div class="dialog-footer">
         <button class="btn-cancel" @click="close" :disabled="loading">Cancelar</button>
         <button
-          class="btn-submit"
+          class="btn btn-primary"
           @click="submit"
           :disabled="loading || !title.trim() || !!salaryError"
         >
@@ -915,11 +920,12 @@ const submit = () => {
   margin-top: 0.75rem;
 }
 
-.req-chip-edit-actions .btn-cancel,
-.req-chip-edit-actions .btn-submit {
-  padding: 0.4rem 1rem;
-  font-size: 0.85rem;
+.req-chip-edit-actions .btn-cancel {
+  padding: 9px 15px;
+  font-size: 13px;
 }
+
+/* .btn-submit migrado a global .btn-primary (assets/global.css) */
 
 .tooltip-trigger {
   position: relative;
@@ -1025,18 +1031,7 @@ const submit = () => {
   background-color: #888;
 }
 
-.btn-submit {
-  padding: 0.75rem 1.5rem;
-  background-color: #d97757;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.btn-submit:hover {
-  background-color: #c06548;
-}
+/* .btn-submit migrado a global .btn-primary (assets/global.css) */
 
 .btn-submit:disabled,
 .btn-cancel:disabled {

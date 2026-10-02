@@ -4,13 +4,22 @@ import { ref } from 'vue'
 import login from './components/login.vue'
 import DashboardView from './components/DashboardView.vue'
 import CreatePositionView from './components/CreatePositionView.vue'
+import PositionDetailView from './components/PositionDetailView.vue'
 
 const isAuthenticated = ref(false)
 
 const currentView = ref('dashboard')
+const selectedPosition = ref(null)
 
 function goToCreatePosition() {
   currentView.value = 'create-position'
+}
+function goToPositionDetail() {
+  currentView.value = 'position-detail'
+}
+function handlePositionCreated(position) {
+  selectedPosition.value = position
+  currentView.value = 'position-detail'
 }
 
 function goToDashboard() {
@@ -27,7 +36,17 @@ function goToDashboard() {
     <DashboardView v-if="currentView === 'dashboard'" @new-position="goToCreatePosition" />
 
     <!-- CREAR POSICIÓN -->
-    <CreatePositionView v-else-if="currentView === 'create-position'" @cancel="goToDashboard" />
+    <CreatePositionView
+      v-else-if="currentView === 'create-position'"
+      @cancel="goToDashboard"
+      @create="handlePositionCreated"
+    />
+
+    <PositionDetailView
+      v-else-if="currentView === 'position-detail'"
+      :position="selectedPosition"
+      @back="goToDashboard"
+    />
   </template>
 </template>
 

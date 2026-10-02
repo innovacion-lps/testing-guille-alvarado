@@ -146,7 +146,7 @@ onMounted(() => {
             <button class="secondary-button" @click="openPositionDialog">New position modal</button>
             <button class="secondary-button" @click="openTasksModal">My tasks</button>
 
-            <button class="primary-button" @click="emit('new-position')">+ Nueva posición</button>
+            <button class="btn btn-primary" @click="emit('new-position')">+ Nueva posición</button>
           </div>
         </section>
 
@@ -317,7 +317,7 @@ onMounted(() => {
             {{ pendingTasks === 1 ? 'tarea pendiente' : 'tareas pendientes' }}
           </span>
 
-          <button class="modal-done-button" @click="closeTasksModal">Listo</button>
+          <button class="btn btn-primary" @click="closeTasksModal">Listo</button>
         </footer>
       </div>
     </div>
@@ -477,34 +477,7 @@ h1 {
   font-size: 13px;
 }
 
-/* BUTTON */
-
-.primary-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 42px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 8px;
-  background: #d97757;
-  color: white;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(42, 37, 32, 0.08);
-  transition:
-    background 150ms ease,
-    transform 150ms ease,
-    box-shadow 150ms ease;
-}
-
-.primary-button:hover {
-  background: #c96643;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(42, 37, 32, 0.12);
-}
+/* BUTTON — .primary-button migrado a global .btn-primary (assets/global.css) */
 
 .plus-icon {
   font-size: 18px;
@@ -731,8 +704,7 @@ h1 {
   gap: 10px;
 }
 
-.secondary-button,
-.primary-button {
+.secondary-button {
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -926,22 +898,7 @@ h1 {
   font-size: 12px;
 }
 
-.modal-done-button {
-  padding: 9px 17px;
-  border: none;
-  border-radius: 9px;
-  background: #d97757;
-  color: white;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.modal-done-button:hover {
-  background: #c96643;
-}
+/* .modal-done-button migrado a global .btn-primary (assets/global.css) */
 
 /* =========================================
    RESPONSIVE
@@ -953,7 +910,7 @@ h1 {
   }
 
   .secondary-button,
-  .primary-button {
+  .btn-primary {
     flex: 1;
   }
 
